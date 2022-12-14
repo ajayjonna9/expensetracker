@@ -9,55 +9,42 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const email = useRef();
   const password = useRef();
-  const confirmPassword = useRef();
-  const [isAccount, setIsAccount] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigator = useNavigate();
   const onclicktoggle = () => {
-    setIsAccount(!isAccount);
+    navigator("/signup");
   };
-
+  const showpassword = () => {
+    setShowPassword(!showPassword);
+  };
   const onsubmit = (e) => {
     e.preventDefault();
-    if (password.current.value === confirmPassword.current.password) {
-      const obj = {
-        email: email.current.value,
-        password: password.current.value,
-        confirmPassword: confirmPassword.current.value,
-      };
-      console.log(obj);
-      async function signUp() {
-        try {
-          let url;
-          if (isAccount) {
-            url =
-              "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCCO6oxBDXyShDKpQc3CuIvIiZCPNoSXQA";
-          } else {
-            url =
-              "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCCO6oxBDXyShDKpQc3CuIvIiZCPNoSXQA";
-          }
-          const res = await axios.post(url, obj);
-          if (!isAccount) {
-            console.log("signup successfully");
-          } else {
-            console.log("Login Successfully");
-            navigator("/home");
-          }
-        } catch (err) {
-          alert("somthing went wrong, please try again");
-        }
+
+    const obj = {
+      email: email.current.value,
+      password: password.current.value,
+    };
+    console.log(obj);
+    async function Login() {
+      try {
+        const url =
+          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCCO6oxBDXyShDKpQc3CuIvIiZCPNoSXQA";
+
+        const res = await axios.post(url, obj);
+        console.log("login success");
+        navigator("/home");
+      } catch (err) {
+        alert("somthing went wrong, please try again");
       }
-      signUp();
-    } else {
-      alert("confirmPassword is mismatch");
     }
+    Login();
   };
   return (
     <div className="form">
       <Card>
         <Card.Body>
-          <Card.Title className="m-4">
-            {!isAccount ? <h5>Sign Up</h5> : <h5>Login</h5>}
-          </Card.Title>
+          <Card.Title className="m-4">Login</Card.Title>
           <Form onSubmit={onsubmit}>
             <Form.Control
               type="email"
@@ -65,36 +52,30 @@ const Login = () => {
               ref={email}
               required
             />
-
             <Form.Control
-              type="password"
+              type={!showPassword ? "password" : "text"}
               placeholder="Enter password"
               ref={password}
               className="mt-2"
               required
             />
+            <div className="mt-2 text-start">
+              <input type="checkbox" id="vehicle1" onClick={showpassword} />
+              <label forhtml="vehicle1">Show Password </label>
+            </div>
 
-            <Form.Control
-              type="text"
-              placeholder="confirm password"
-              ref={confirmPassword}
-              className="mt-2"
-              required
-            />
-
-            <Button variant="success" type="submit" className="mt-4 mb-5">
-              {!isAccount ? <h6>Sign Up</h6> : <h6>Login</h6>}
+            <Button variant="success" type="submit" className="mt-5 ">
+              Login
             </Button>
+            <div className="mt-2 mb-2">
+              <a href="">forget password</a>
+            </div>
           </Form>
         </Card.Body>
       </Card>
       <div>
         <button className="togglelogin" onClick={onclicktoggle}>
-          {!isAccount ? (
-            <p className="mt-2">Have an account?Login</p>
-          ) : (
-            <p className="mt-2">Don't have an account?SignUp</p>
-          )}
+          Don't have an account?SignUp
         </button>
       </div>
     </div>

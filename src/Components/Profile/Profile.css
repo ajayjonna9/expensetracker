@@ -1,0 +1,25 @@
+input[type="file"]::-webkit-file-upload-button {
+}
+.profile {
+  margin-left: 400px;
+  margin-top: 100px;
+}
+.profile input {
+  margin-right: 30px;
+  margin-left: 20px;
+  border-radius: 5px;
+}
+.profile button {
+  margin-right: 50px;
+  border: 1px solid red;
+  background-color: white;
+  border-radius: 5px;
+  color: red;
+}
+.profileupdate {
+  border: 1px solid skyblue;
+  background-color: skyblue;
+  margin-left: 400px;
+  margin-top: 20px;
+  border-radius: 5px;
+}
