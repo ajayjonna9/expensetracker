@@ -1,14 +1,21 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import "./Login.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const email = useRef();
   const password = useRef();
   const confirmPassword = useRef();
+  const [isAccount, setIsAccount] = useState(false);
+  const navigator = useNavigate();
+  const onclicktoggle = () => {
+    setIsAccount(!isAccount);
+  };
+
   const onsubmit = (e) => {
     e.preventDefault();
     if (password.current.value === confirmPassword.current.password) {
@@ -20,11 +27,21 @@ const Login = () => {
       console.log(obj);
       async function signUp() {
         try {
-          const res = await axios.post(
-            "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCCO6oxBDXyShDKpQc3CuIvIiZCPNoSXQA",
-            obj
-          );
-          console.log("signup successfully");
+          let url;
+          if (isAccount) {
+            url =
+              "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCCO6oxBDXyShDKpQc3CuIvIiZCPNoSXQA";
+          } else {
+            url =
+              "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCCO6oxBDXyShDKpQc3CuIvIiZCPNoSXQA";
+          }
+          const res = await axios.post(url, obj);
+          if (!isAccount) {
+            console.log("signup successfully");
+          } else {
+            console.log("Login Successfully");
+            navigator("/home");
+          }
         } catch (err) {
           alert("somthing went wrong, please try again");
         }
@@ -38,7 +55,9 @@ const Login = () => {
     <div className="form">
       <Card>
         <Card.Body>
-          <Card.Title className="m-4">Sign Up</Card.Title>
+          <Card.Title className="m-4">
+            {!isAccount ? <h5>Sign Up</h5> : <h5>Login</h5>}
+          </Card.Title>
           <Form onSubmit={onsubmit}>
             <Form.Control
               type="email"
@@ -64,13 +83,19 @@ const Login = () => {
             />
 
             <Button variant="success" type="submit" className="mt-4 mb-5">
-              Sign Up
+              {!isAccount ? <h6>Sign Up</h6> : <h6>Login</h6>}
             </Button>
           </Form>
         </Card.Body>
       </Card>
       <div>
-        <button className="togglelogin">Have an account?Login</button>
+        <button className="togglelogin" onClick={onclicktoggle}>
+          {!isAccount ? (
+            <p className="mt-2">Have an account?Login</p>
+          ) : (
+            <p className="mt-2">Don't have an account?SignUp</p>
+          )}
+        </button>
       </div>
     </div>
   );
