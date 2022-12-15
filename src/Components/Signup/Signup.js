@@ -1,15 +1,17 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import "../Login/Login.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Contex from "../Store/Contex";
 
 const Signup = () => {
   const email = useRef();
   const password = useRef();
   const confirmPassword = useRef();
+  const contexVal = useContext(Contex);
 
   const navigator = useNavigate();
   const onclicktoggle = () => {
@@ -23,13 +25,28 @@ const Signup = () => {
         password: password.current.value,
         confirmPassword: confirmPassword.current.value,
       };
+      const head = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
       console.log(obj);
       async function signUp() {
         try {
           const url =
             "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCCO6oxBDXyShDKpQc3CuIvIiZCPNoSXQA";
 
-          const res = await axios.post(url, obj);
+          const res = await axios.post(url, obj, head);
+          const RegEx = /^[a-z0-9]+$/i;
+          let newMail = "";
+          for (let i = 0; i < res.data.email.length; i++) {
+            if (RegEx.test(res.data.email[i])) {
+              newMail = newMail + res.data.email[i];
+            }
+          }
+          contexVal.addToken(res.data.idToken, newMail);
+          //contexVal.addToken(res.data.)
           console.log("signup  success");
           navigator("/home");
         } catch (err) {

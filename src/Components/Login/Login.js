@@ -1,15 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import "./Login.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Contex from "../Store/Contex";
 
 const Login = () => {
   const email = useRef();
   const password = useRef();
   const [showPassword, setShowPassword] = useState(false);
+  const contexVal = useContext(Contex);
 
   const navigator = useNavigate();
   const onclicktoggle = () => {
@@ -21,17 +23,32 @@ const Login = () => {
   const onsubmit = (e) => {
     e.preventDefault();
 
-    const obj = {
-      email: email.current.value,
-      password: password.current.value,
-    };
-    console.log(obj);
     async function Login() {
       try {
+        const head = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+        const obj = {
+          email: email.current.value,
+          password: password.current.value,
+        };
         const url =
           "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCCO6oxBDXyShDKpQc3CuIvIiZCPNoSXQA";
 
-        const res = await axios.post(url, obj);
+        const res = await axios.post(url, obj, head);
+
+        console.log(res);
+        const RegEx = /^[a-z0-9]+$/i;
+        let newMail = "";
+        for (let i = 0; i < res.data.email.length; i++) {
+          if (RegEx.test(res.data.email[i])) {
+            newMail = newMail + res.data.email[i];
+          }
+        }
+        contexVal.addToken(res.data.idToken, newMail);
+
         console.log("login success");
         navigator("/home");
       } catch (err) {
