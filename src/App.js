@@ -8,6 +8,7 @@ import Signup from "./Components/Signup/Signup";
 import Profile from "./Components/Profile/Profile";
 import ContexProvider from "./Components/Store/ContexProvider";
 import Forgetpassword from "./Components/ForgetPassword/Forgetpassword";
+import AddExpense from "./Components/AddExpanses/AddExpense";
 function App() {
   return (
     <ContexProvider>
@@ -17,6 +18,7 @@ function App() {
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
         <Route path="/forgetpassword" element={<Forgetpassword />}></Route>
+        <Route path="/addexpanse" element={<AddExpense />}></Route>
       </Routes>
     </ContexProvider>
   );

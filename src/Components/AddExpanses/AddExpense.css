@@ -1,0 +1,8 @@
+.expense {
+  width: 500px;
+  text-align: center;
+  margin: auto;
+  position: relative;
+
+  top: 100px;
+}
