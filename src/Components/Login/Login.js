@@ -85,7 +85,7 @@ const Login = () => {
               Login
             </Button>
             <div className="mt-2 mb-2">
-              <a href="">forget password</a>
+              <a href="/forgetpassword">forget password</a>
             </div>
           </Form>
         </Card.Body>
