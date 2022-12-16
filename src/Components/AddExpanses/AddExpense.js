@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
@@ -8,13 +8,14 @@ import Card from "react-bootstrap/Card";
 import "./AddExpense.css";
 import Expense from "./Expense";
 import Table from "react-bootstrap/Table";
+import axios from "axios";
 
 const AddExpense = () => {
   const moneySpent = useRef();
   const description = useRef();
   const category = useRef();
   const [expensearr, setExpensearr] = useState([]);
-  const onAddExpanse = (e) => {
+  const onAddExpanse = async (e) => {
     e.preventDefault();
     const obj = {
       money: moneySpent.current.value,
@@ -22,17 +23,54 @@ const AddExpense = () => {
       category: category.current.value,
     };
     console.log(obj);
-    setExpensearr((pre) => {
-      return [...pre, obj];
-    });
+
+    try {
+      const res = await axios.post(
+        "https://expensetracker-19ce3-default-rtdb.firebaseio.com/expensedata.json",
+        obj
+      );
+      console.log(res);
+      const newobj = {
+        ...obj,
+        id: res.data.name,
+      };
+      setExpensearr((pre) => {
+        return [...pre, obj];
+      });
+    } catch (err) {
+      alert("somthing went wrong");
+    }
   };
+  useEffect(() => {
+    async function getdata() {
+      try {
+        const res = await axios.get(
+          "https://expensetracker-19ce3-default-rtdb.firebaseio.com/expensedata.json"
+        );
+        console.log(res.data);
+        for (let i in res.data) {
+          console.log(i);
+          setExpensearr((pre) => {
+            const newobj = {
+              ...res.data[i],
+              id: i,
+            };
+            return [...pre, newobj];
+          });
+        }
+      } catch (err) {
+        alert("somthing went wrong");
+      }
+    }
+    getdata();
+  }, []);
   return (
     <div className="expense">
       <Card>
         <Card.Body>
           <Card.Title className="m-4">Expense</Card.Title>
           <form onSubmit={onAddExpanse}>
-            <div class="mb-3">
+            <div className="mb-3">
               <label forhtml="money" className="form-label">
                 Money Spent
               </label>
@@ -44,7 +82,7 @@ const AddExpense = () => {
                 required
               />
             </div>
-            <div class="mb-3">
+            <div className="mb-3">
               <label forhtml="description" className="form-label">
                 Description
               </label>
@@ -58,7 +96,7 @@ const AddExpense = () => {
             </div>
 
             <div className="input-group mt-5 mb-3">
-              <label className="input-group-text" for="inputGroupSelect01">
+              <label className="input-group-text" forhtml="inputGroupSelect01">
                 Category
               </label>
               <select
@@ -67,7 +105,7 @@ const AddExpense = () => {
                 ref={category}
                 required
               >
-                <option value="" selected>
+                <option value="" defaultValue>
                   Select
                 </option>
                 <option value="Car">Car</option>
@@ -86,7 +124,7 @@ const AddExpense = () => {
       <Card className="mt-5">
         <Card.Body>
           <Card.Title className="m-4">Expenses</Card.Title>
-          <table class="table table-success table-striped">
+          <table className="table table-success table-striped">
             <thead>
               <tr>
                 <th>money</th>
@@ -98,6 +136,7 @@ const AddExpense = () => {
               {expensearr.map((ele) => {
                 return (
                   <Expense
+                    key={ele.id}
                     money={ele.money}
                     des={ele.des}
                     category={ele.category}
