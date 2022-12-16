@@ -59,7 +59,7 @@ const Profile = () => {
       try {
         console.log(contexVal.token, contexVal.email);
         const obj1 = {
-          idToken: contexVal.token,
+          idToken: localStorage.getItem("token"),
         };
         const head = {
           headers: {

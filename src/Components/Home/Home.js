@@ -11,6 +11,10 @@ const Home = () => {
   const gotoProfile = () => {
     navigator("/profile");
   };
+  const onLogout = () => {
+    localStorage.removeItem("token");
+    navigator("/login");
+  };
   const verifyEmail = async () => {
     try {
       const obj = {
@@ -31,13 +35,15 @@ const Home = () => {
     <>
       <div className="d-flex ">
         <p className="home flex-grow-1">Welcome to Expense Tracker</p>
-
+        <button className="home" onClick={verifyEmail}>
+          verify email
+        </button>
         <button className="home" onClick={gotoProfile}>
           your profile is incomplete
         </button>
 
-        <button className="home" onClick={verifyEmail}>
-          verify email
+        <button className="home" onClick={onLogout}>
+          Logout
         </button>
       </div>
       <hr />
