@@ -11,16 +11,25 @@ import Table from "react-bootstrap/Table";
 import axios from "axios";
 
 const AddExpense = () => {
-  const moneySpent = useRef();
-  const description = useRef();
-  const category = useRef();
+  const [moneySpent, setMoneySpent] = useState();
+  const [description, setDescription] = useState();
+  const [category, setCategory] = useState();
   const [expensearr, setExpensearr] = useState([]);
+  const onChangemoney = (e) => {
+    setMoneySpent(() => e.target.value);
+  };
+  const onChangedes = (e) => {
+    setDescription(() => e.target.value);
+  };
+  const onChangecategory = (e) => {
+    setCategory(() => e.target.value);
+  };
   const onAddExpanse = async (e) => {
     e.preventDefault();
     const obj = {
-      money: moneySpent.current.value,
-      des: description.current.value,
-      category: category.current.value,
+      money: moneySpent,
+      des: description,
+      category: category,
     };
     console.log(obj);
 
@@ -35,7 +44,41 @@ const AddExpense = () => {
         id: res.data.name,
       };
       setExpensearr((pre) => {
-        return [...pre, obj];
+        return [...pre, newobj];
+      });
+    } catch (err) {
+      alert("somthing went wrong");
+    }
+  };
+  const editExpanse = async (id, amount, des, category) => {
+    try {
+      const obj = {
+        money: amount,
+        des: des,
+        category: category,
+        id: id,
+      };
+      deleteExpanse(id);
+      setMoneySpent(amount);
+      setCategory(category);
+      setDescription(des);
+    } catch (err) {
+      alert("somthing went wrong");
+    }
+  };
+  const deleteExpanse = async (id) => {
+    try {
+      const res = await axios.delete(
+        "https://expensetracker-19ce3-default-rtdb.firebaseio.com/expensedata/" +
+          id +
+          ".json"
+      );
+      console.log(res);
+      setExpensearr((pre) => {
+        const newpre = pre.filter((ele) => {
+          return ele.id !== id;
+        });
+        return [...newpre];
       });
     } catch (err) {
       alert("somthing went wrong");
@@ -78,7 +121,8 @@ const AddExpense = () => {
                 type="number"
                 className="form-control"
                 id="money"
-                ref={moneySpent}
+                value={moneySpent}
+                onChange={onChangemoney}
                 required
               />
             </div>
@@ -90,7 +134,8 @@ const AddExpense = () => {
                 type="text"
                 className="form-control"
                 id="description"
-                ref={description}
+                value={description}
+                onChange={onChangedes}
                 required
               />
             </div>
@@ -102,7 +147,8 @@ const AddExpense = () => {
               <select
                 className="form-select"
                 id="inputGroupSelect01"
-                ref={category}
+                value={category}
+                onChange={onChangecategory}
                 required
               >
                 <option value="" defaultValue>
@@ -130,6 +176,7 @@ const AddExpense = () => {
                 <th>money</th>
                 <th>description</th>
                 <th>category</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -140,6 +187,9 @@ const AddExpense = () => {
                     money={ele.money}
                     des={ele.des}
                     category={ele.category}
+                    id={ele.id}
+                    delete={deleteExpanse}
+                    edit={editExpanse}
                   />
                 );
               })}
