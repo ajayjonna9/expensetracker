@@ -1,11 +1,10 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Contex from "../Store/Contex";
+
 import "./Home.css";
 
 const Home = () => {
-  const contexVal = useContext(Contex);
   const navigator = useNavigate();
 
   const gotoProfile = () => {

@@ -5,13 +5,15 @@ import Card from "react-bootstrap/Card";
 import "./Login.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Contex from "../Store/Contex";
+
+import { authActions } from "../Store/Reducers/AuthReducer";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const email = useRef();
   const password = useRef();
   const [showPassword, setShowPassword] = useState(false);
-  const contexVal = useContext(Contex);
+  const dispatcher = useDispatch();
 
   const navigator = useNavigate();
   const onclicktoggle = () => {
@@ -40,15 +42,19 @@ const Login = () => {
         const res = await axios.post(url, obj, head);
 
         console.log(res);
-        const RegEx = /^[a-z0-9]+$/i;
-        let newMail = "";
-        for (let i = 0; i < res.data.email.length; i++) {
-          if (RegEx.test(res.data.email[i])) {
-            newMail = newMail + res.data.email[i];
-          }
-        }
-        contexVal.addToken(res.data.idToken, newMail);
-
+        // const RegEx = /^[a-z0-9]+$/i;
+        // let newMail = "";
+        // for (let i = 0; i < res.data.email.length; i++) {
+        //   if (RegEx.test(res.data.email[i])) {
+        //     newMail = newMail + res.data.email[i];
+        //   }
+        // }
+        // contexVal.addToken(res.data.idToken, newMail);
+        const values = {
+          token: res.data.idToken,
+          email: res.data.email,
+        };
+        dispatcher(authActions.addtoken(values));
         console.log("login success");
         navigator("/home");
       } catch (err) {

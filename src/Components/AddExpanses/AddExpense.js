@@ -9,12 +9,17 @@ import "./AddExpense.css";
 import Expense from "./Expense";
 import Table from "react-bootstrap/Table";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { expanseActions } from "../Store/Reducers/ExpenseReducer";
 
 const AddExpense = () => {
   const [moneySpent, setMoneySpent] = useState();
   const [description, setDescription] = useState();
   const [category, setCategory] = useState();
-  const [expensearr, setExpensearr] = useState([]);
+  const [exp, setexp] = useState([]);
+
+  const expansearr = useSelector((state) => state.expanse.expansearr);
+  const dispatcher = useDispatch();
   const onChangemoney = (e) => {
     setMoneySpent(() => e.target.value);
   };
@@ -43,9 +48,12 @@ const AddExpense = () => {
         ...obj,
         id: res.data.name,
       };
-      setExpensearr((pre) => {
-        return [...pre, newobj];
-      });
+
+      // setExpensearr((pre) => {
+      //   return [...pre, newobj];
+      // });
+      dispatcher(expanseActions.addExpanse(newobj));
+      console.log(expansearr);
     } catch (err) {
       alert("somthing went wrong");
     }
@@ -74,12 +82,13 @@ const AddExpense = () => {
           ".json"
       );
       console.log(res);
-      setExpensearr((pre) => {
-        const newpre = pre.filter((ele) => {
-          return ele.id !== id;
-        });
-        return [...newpre];
-      });
+      dispatcher(expanseActions.deleteExpanse(id));
+      // setExpensearr((pre) => {
+      //   const newpre = pre.filter((ele) => {
+      //     return ele.id !== id;
+      //   });
+      //   return [...newpre];
+      // });
     } catch (err) {
       alert("somthing went wrong");
     }
@@ -90,19 +99,27 @@ const AddExpense = () => {
         const res = await axios.get(
           "https://expensetracker-19ce3-default-rtdb.firebaseio.com/expensedata.json"
         );
-        console.log(res.data);
+        console.log("hi", res.data);
         for (let i in res.data) {
           console.log(i);
-          setExpensearr((pre) => {
-            const newobj = {
-              ...res.data[i],
-              id: i,
-            };
-            return [...pre, newobj];
-          });
+          const newobj = {
+            ...res.data[i],
+            id: i,
+          };
+          dispatcher(expanseActions.addExpanse(newobj));
+          // setExpensearr((pre) => {
+          //   const newobj = {
+          //     ...res.data[i],
+          //     id: i,
+          //   };
+          //   return [...pre, newobj];
+          // });
         }
+        console.log("exp", expansearr);
+        console.log("exp", Array.isArray(expansearr));
+        console.log("exp", Array.isArray(exp));
       } catch (err) {
-        alert("somthing went wrong");
+        alert("somthing wrong");
       }
     }
     getdata();
@@ -180,7 +197,7 @@ const AddExpense = () => {
               </tr>
             </thead>
             <tbody>
-              {expensearr.map((ele) => {
+              {expansearr.map((ele) => {
                 return (
                   <Expense
                     key={ele.id}

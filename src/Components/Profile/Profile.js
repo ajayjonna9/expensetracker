@@ -1,12 +1,11 @@
 import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import "./Profile.css";
-import Contex from "../Store/Contex";
 
 const Profile = () => {
   const [name, setName] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
-  const contexVal = useContext(Contex);
+
   const [readOnly, setReadOnly] = useState(true);
   const onEdit = () => {
     setReadOnly(false);
@@ -20,10 +19,10 @@ const Profile = () => {
   const onUpdate = async (e) => {
     e.preventDefault();
     try {
-      console.log(contexVal.token, contexVal.email);
+      // console.log(contexVal.token, contexVal.email);
       console.log("photo", photoUrl);
       const obj = {
-        idToken: contexVal.token,
+        idToken: localStorage.getItem("token"),
         displayName: name,
         photoUrl: photoUrl,
         returnSecureToken: true,
@@ -39,17 +38,17 @@ const Profile = () => {
         head
       );
       console.log(res);
-      const obj1 = {
-        idToken: contexVal.token,
-      };
+      // const obj1 = {
+      //   // idToken: contexVal.token,
+      // };
 
-      const resData = await axios.post(
-        "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCCO6oxBDXyShDKpQc3CuIvIiZCPNoSXQA",
-        obj1,
-        head
-      );
+      // const resData = await axios.post(
+      //   "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCCO6oxBDXyShDKpQc3CuIvIiZCPNoSXQA",
+      //   obj1,
+      //   head
+      // );
       setReadOnly(true);
-      console.log("useup", resData);
+      // console.log("useup", resData);
     } catch (err) {
       alert("somthing went wrong");
     }
@@ -57,7 +56,7 @@ const Profile = () => {
   useEffect(() => {
     async function getData() {
       try {
-        console.log(contexVal.token, contexVal.email);
+        // console.log(contexVal.token, contexVal.email);
         const obj1 = {
           idToken: localStorage.getItem("token"),
         };
