@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   expansearr: [],
+  totalSpend: 0,
 };
 const expanseSlice = createSlice({
   name: "Expanse",
@@ -8,11 +9,17 @@ const expanseSlice = createSlice({
   reducers: {
     addExpanse: (state, action) => {
       state.expansearr.push(action.payload);
+      state.totalSpend =
+        Number(state.totalSpend) + Number(action.payload.money);
     },
     deleteExpanse: (state, action) => {
-      state.expansearr = state.expansearr.filter(
-        (item) => item.id !== action.payload
-      );
+      state.expansearr = state.expansearr.filter((item) => {
+        if (item.id === action.payload) {
+          state.totalSpend =
+            Number(state.totalSpend) - Number(action.item.money);
+        }
+        return item.id !== action.payload;
+      });
     },
   },
 });

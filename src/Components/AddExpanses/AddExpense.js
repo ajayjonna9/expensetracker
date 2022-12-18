@@ -11,6 +11,7 @@ import Table from "react-bootstrap/Table";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { expanseActions } from "../Store/Reducers/ExpenseReducer";
+import { themeActions } from "../Store/Reducers/TheamReducer";
 
 const AddExpense = () => {
   const [moneySpent, setMoneySpent] = useState();
@@ -19,7 +20,14 @@ const AddExpense = () => {
   const [exp, setexp] = useState([]);
 
   const expansearr = useSelector((state) => state.expanse.expansearr);
+  const totalSpend = useSelector((state) => state.expanse.totalSpend);
+  const darkTheme = useSelector((state) => state.theme.darkTheme);
+  console.log(totalSpend);
   const dispatcher = useDispatch();
+  const onPremium = () => {
+    dispatcher(themeActions.addDarkTheme());
+  };
+
   const onChangemoney = (e) => {
     setMoneySpent(() => e.target.value);
   };
@@ -125,95 +133,119 @@ const AddExpense = () => {
     getdata();
   }, []);
   return (
-    <div className="expense">
-      <Card>
-        <Card.Body>
-          <Card.Title className="m-4">Expense</Card.Title>
-          <form onSubmit={onAddExpanse}>
-            <div className="mb-3">
-              <label forhtml="money" className="form-label">
-                Money Spent
-              </label>
-              <input
-                type="number"
-                className="form-control"
-                id="money"
-                value={moneySpent}
-                onChange={onChangemoney}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label forhtml="description" className="form-label">
-                Description
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="description"
-                value={description}
-                onChange={onChangedes}
-                required
-              />
-            </div>
+    <div className={darkTheme && "darktheme"}>
+      <div className="expense">
+        <Card>
+          <Card.Body>
+            <Card.Title className="m-4">Expense</Card.Title>
+            <form onSubmit={onAddExpanse}>
+              <div className="mb-3">
+                <label forhtml="money" className="form-label">
+                  Money Spent
+                </label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="money"
+                  value={moneySpent}
+                  onChange={onChangemoney}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label forhtml="description" className="form-label">
+                  Description
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="description"
+                  value={description}
+                  onChange={onChangedes}
+                  required
+                />
+              </div>
 
-            <div className="input-group mt-5 mb-3">
-              <label className="input-group-text" forhtml="inputGroupSelect01">
-                Category
-              </label>
-              <select
-                className="form-select"
-                id="inputGroupSelect01"
-                value={category}
-                onChange={onChangecategory}
-                required
+              <div className="input-group mt-5 mb-3">
+                <label
+                  className="input-group-text"
+                  forhtml="inputGroupSelect01"
+                >
+                  Category
+                </label>
+                <select
+                  className="form-select"
+                  id="inputGroupSelect01"
+                  value={category}
+                  onChange={onChangecategory}
+                  required
+                >
+                  <option value="" defaultValue>
+                    Select
+                  </option>
+                  <option value="Car">Car</option>
+                  <option value="Movies">Movies</option>
+                  <option value="Food">Food</option>
+                  <option value="Petrol">Petrol</option>
+                </select>
+              </div>
+
+              <button type="submit" className="btn btn-primary">
+                Add Expense
+              </button>
+            </form>
+          </Card.Body>
+        </Card>
+        <Card className="mt-5">
+          <Card.Body>
+            {totalSpend > 10000 && (
+              <Button onClick={onPremium} className="m-5">
+                Premium
+              </Button>
+            )}
+            {totalSpend > 1000 && darkTheme && (
+              <Button onClick={onPremium}>Normal Theme</Button>
+            )}
+            {totalSpend > 1000 && (
+              <a
+                class="btn btn-danger"
+                role="button"
+                href="/http://localhost:3000/addexpanse"
+                download="proposed_file_name"
               >
-                <option value="" defaultValue>
-                  Select
-                </option>
-                <option value="Car">Car</option>
-                <option value="Movies">Movies</option>
-                <option value="Food">Food</option>
-                <option value="Petrol">Petrol</option>
-              </select>
-            </div>
-
-            <button type="submit" className="btn btn-primary">
-              Add Expense
-            </button>
-          </form>
-        </Card.Body>
-      </Card>
-      <Card className="mt-5">
-        <Card.Body>
-          <Card.Title className="m-4">Expenses</Card.Title>
-          <table className="table table-success table-striped">
-            <thead>
-              <tr>
-                <th>money</th>
-                <th>description</th>
-                <th>category</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {expansearr.map((ele) => {
-                return (
-                  <Expense
-                    key={ele.id}
-                    money={ele.money}
-                    des={ele.des}
-                    category={ele.category}
-                    id={ele.id}
-                    delete={deleteExpanse}
-                    edit={editExpanse}
-                  />
-                );
-              })}
-            </tbody>
-          </table>
-        </Card.Body>
-      </Card>
+                Download
+              </a>
+            )}
+            <Card.Title className="m-4">Expenses</Card.Title>
+            <table className="table table-success table-striped">
+              <thead>
+                {console.log(totalSpend)}
+                <tr>
+                  <th>money</th>
+                  <th>description</th>
+                  <th>category</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {expansearr.map((ele) => {
+                  return (
+                    <Expense
+                      key={ele.id}
+                      money={ele.money}
+                      des={ele.des}
+                      category={ele.category}
+                      id={ele.id}
+                      delete={deleteExpanse}
+                      edit={editExpanse}
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
+          </Card.Body>
+        </Card>
+      </div>
     </div>
   );
 };
