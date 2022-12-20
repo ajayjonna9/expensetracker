@@ -18,7 +18,10 @@ const Forgetpassword = () => {
         "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyCCO6oxBDXyShDKpQc3CuIvIiZCPNoSXQA",
         obj
       );
-    } catch (err) {}
+      alert("Link send to your Email");
+    } catch (err) {
+      alert("somthing went wrong");
+    }
   };
   return (
     <div className="form">

@@ -1,10 +1,19 @@
 .home {
   margin: 10px;
 }
+.home:hover {
+  cursor: pointer;
+}
+button.home:hover {
+  background-color: lightseagreen;
+}
 button.home {
   border: 0px solid;
   margin-right: 10px;
   background-color: skyblue;
   border-radius: 20px;
   padding: 0px 10px 0px 10px;
+}
+.homebackground {
+  background-color: skyblue;
 }

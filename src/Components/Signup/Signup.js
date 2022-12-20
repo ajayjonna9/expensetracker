@@ -20,6 +20,7 @@ const Signup = () => {
   };
   const onsubmit = (e) => {
     e.preventDefault();
+    dispatcher(authActions.setFirst());
     if (password.current.value === confirmPassword.current.value) {
       const obj = {
         email: email.current.value,
@@ -54,7 +55,7 @@ const Signup = () => {
           };
           dispatcher(authActions.addtoken(values));
           console.log("signup  success");
-          navigator("/home");
+          navigator("/");
         } catch (err) {
           alert("somthing went wrong, please try again");
         }
@@ -65,44 +66,46 @@ const Signup = () => {
     }
   };
   return (
-    <div className="form">
-      <Card>
-        <Card.Body>
-          <Card.Title className="m-4">Sign Up</Card.Title>
-          <Form onSubmit={onsubmit}>
-            <Form.Control
-              type="email"
-              placeholder="Enter email"
-              ref={email}
-              required
-            />
+    <div className="background">
+      <div className="form">
+        <Card>
+          <Card.Body>
+            <Card.Title className="m-4">Sign Up</Card.Title>
+            <Form onSubmit={onsubmit}>
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                ref={email}
+                required
+              />
 
-            <Form.Control
-              type="password"
-              placeholder="Enter password"
-              ref={password}
-              className="mt-2 "
-              required
-            />
+              <Form.Control
+                type="password"
+                placeholder="Enter password"
+                ref={password}
+                className="mt-2 "
+                required
+              />
 
-            <Form.Control
-              type="text"
-              placeholder="confirm password"
-              ref={confirmPassword}
-              className="mt-2"
-              required
-            />
+              <Form.Control
+                type="text"
+                placeholder="confirm password"
+                ref={confirmPassword}
+                className="mt-2"
+                required
+              />
 
-            <Button variant="success" type="submit" className="mt-4 mb-5">
-              Sign Up
-            </Button>
-          </Form>
-        </Card.Body>
-      </Card>
-      <div>
-        <button className="togglelogin" onClick={onclicktoggle}>
-          Have an account?Login
-        </button>
+              <Button variant="success" type="submit" className="mt-4 mb-5">
+                Sign Up
+              </Button>
+            </Form>
+          </Card.Body>
+        </Card>
+        <div>
+          <button className="togglelogin" onClick={onclicktoggle}>
+            Have an account?Login
+          </button>
+        </div>
       </div>
     </div>
   );

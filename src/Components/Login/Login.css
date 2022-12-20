@@ -6,6 +6,12 @@
   top: 250;
   top: 100px;
 }
+.background {
+  background-image: url("../photos/loginpic.jpg");
+  background-repeat: no-repeat;
+  height: 100vh;
+  background-size: cover;
+}
 .form button[type="submit"] {
   width: 100%;
   border-radius: 30px;
